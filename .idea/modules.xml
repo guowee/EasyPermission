@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/EasyPermission.iml" filepath="$PROJECT_DIR$/EasyPermission.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/easy-permission/easy-permission.iml" filepath="$PROJECT_DIR$/easy-permission/easy-permission.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-annotation/lib-annotation.iml" filepath="$PROJECT_DIR$/lib-annotation/lib-annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-compiler/lib-compiler.iml" filepath="$PROJECT_DIR$/lib-compiler/lib-compiler.iml" />
     </modules>
   </component>
 </project>

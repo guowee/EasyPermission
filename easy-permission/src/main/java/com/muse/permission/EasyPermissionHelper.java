@@ -6,28 +6,26 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 
+
 import com.muse.permission.util.PermissionUtil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by GuoWee on 2018/3/13.
+ * Created by GuoWee on 2018/3/15.
  */
 
 public class EasyPermissionHelper {
+    private static final String SUFFIX = "$$PermissionProxy";
 
     private String[] permissions;
     private int requestCode;
     private Object object;
 
-
     private EasyPermissionHelper(Object obj) {
         this.object = obj;
     }
-
 
     public static EasyPermissionHelper with(Activity activity) {
         return new EasyPermissionHelper(activity);
@@ -46,6 +44,7 @@ public class EasyPermissionHelper {
         this.permissions = permissions;
         return this;
     }
+
 
     public void request() {
         requestPermissions(object, requestCode, permissions);
@@ -96,30 +95,27 @@ public class EasyPermissionHelper {
 
 
     private static void executeSuccess(Object obj, int requestCode) {
-        Method succMethod = PermissionUtil.findMethodWithRequestCode(obj.getClass(), PermissionSuccess.class, requestCode);
-        executeMethod(obj, succMethod);
+        findPermissionProxy(obj).grant(obj, requestCode);
     }
 
     private static void executeFail(Object obj, int requestCode) {
-        Method failMethod = PermissionUtil.findMethodWithRequestCode(obj.getClass(), PermissionFail.class, requestCode);
-        executeMethod(obj, failMethod);
+        findPermissionProxy(obj).denied(obj, requestCode);
     }
 
-    private static void executeMethod(Object object, Method method) {
-        if (method != null) {
-            if (!method.isAccessible()) {
-                method.setAccessible(true);
-            }
 
-            try {
-                method.invoke(object, new Object[]{});
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-
+    private static PermissionProxy findPermissionProxy(Object activity) {
+        try {
+            Class clazz = activity.getClass();
+            Class injectorClazz = Class.forName(clazz.getName() + SUFFIX);
+            return (PermissionProxy) injectorClazz.newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
+        throw new RuntimeException(String.format("can not find %s , something when compiler.", activity.getClass().getSimpleName() + SUFFIX));
     }
 
 
@@ -132,6 +128,4 @@ public class EasyPermissionHelper {
 
         return null;
     }
-
-
 }

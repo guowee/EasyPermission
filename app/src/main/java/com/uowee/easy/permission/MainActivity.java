@@ -8,15 +8,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.muse.annotation.PermissionFail;
+import com.muse.annotation.PermissionSuccess;
 import com.muse.permission.EasyPermissionHelper;
-import com.muse.permission.PermissionFail;
-import com.muse.permission.PermissionSuccess;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private Button cameraBtn;
 
     private final static int REQUEST_PERMISSION_CAMERA_CODE = 0x01;
+    private final static int REQUEST_PERMISSION_TEST_CODE = 0x02;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +40,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     @PermissionSuccess(requestCode = REQUEST_PERMISSION_CAMERA_CODE)
-    private void openSucc() {
+    void openSucc() {
         Toast.makeText(this, "Camera is open", Toast.LENGTH_SHORT).show();
     }
 
     @PermissionFail(requestCode = REQUEST_PERMISSION_CAMERA_CODE)
-    private void openFail() {
+    void openFail() {
         Toast.makeText(this, "Camera permission is not granted", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_PERMISSION_TEST_CODE)
+    void test1() {
+    }
+
+    @PermissionFail(requestCode = REQUEST_PERMISSION_TEST_CODE)
+    void test2() {
+
     }
 
 
