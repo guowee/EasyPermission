@@ -3,6 +3,8 @@ package com.muse.compiler;
 import com.google.auto.service.AutoService;
 import com.muse.annotation.PermissionFail;
 import com.muse.annotation.PermissionSuccess;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -23,6 +25,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
@@ -112,6 +115,20 @@ public class PermissionProcessor extends AbstractProcessor {
 
         for (String key : classMap.keySet()) {
             ProxyInfo proxyInfo = classMap.get(key);
+
+               /* // build class
+                TypeSpec typeSpec = TypeSpec.classBuilder(proxyInfo.getTypeElement().getSimpleName() + "$$ViewInjector").addModifiers(Modifier.PUBLIC)
+
+                        .build();
+                // Put the target Class under the same package to solve the accessibility of the Class property
+                String packageFullName = elementUtils.getPackageOf(proxyInfo.getTypeElement()).getQualifiedName().toString();
+                JavaFile javaFile = JavaFile.builder(packageFullName, typeSpec)
+                        .build();
+                // generating the class file
+
+                javaFile.writeTo(mFiler);*/
+
+
             try {
                 mMessager.printMessage(Diagnostic.Kind.NOTE, "ClassFullName: " + proxyInfo.getProxyFullClassName());
                 JavaFileObject object = mFiler.createSourceFile(proxyInfo.getProxyFullClassName(), proxyInfo.getTypeElement());
@@ -126,6 +143,7 @@ public class PermissionProcessor extends AbstractProcessor {
                         proxyInfo.getTypeElement(), e.getMessage());
             }
         }
+
 
     }
 

@@ -1,8 +1,14 @@
 package com.muse.compiler;
 
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.processing.Filer;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -15,6 +21,7 @@ public class ProxyInfo {
 
     private String packageName;
     private String proxyClassName;
+
 
     private TypeElement typeElement;
 
@@ -38,7 +45,21 @@ public class ProxyInfo {
         return packageName + "." + proxyClassName;
     }
 
+
+    public void brewJava() {
+        // build class
+        TypeSpec typeSpec = TypeSpec.classBuilder(proxyClassName).addModifiers(Modifier.PUBLIC)
+                .build();
+        // Put the target Class under the same package to solve the accessibility of the Class property
+        JavaFile javaFile = JavaFile.builder(packageName, typeSpec)
+                .build();
+        // generating the class file
+
+        //javaFile.writeTo(mFiler);
+    }
+
     public String generateJavaCode() {
+
         StringBuilder builder = new StringBuilder();
         builder.append("// Generated code. Do not modify!\n");
         builder.append("package ").append(packageName).append(";\n\n");
